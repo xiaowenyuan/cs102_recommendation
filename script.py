@@ -32,54 +32,101 @@ class Studio:
 class BST:
     def __init__(self):
         self.root = None
-        self.depth = 0 
+        self.size = 0 
 
-    def get_bst_depth(self):
-        return self.depth
+    def get_bst_size(self):
+        return self.size
 
-    def insert(self, new_key, new_payload):
+    def put(self, new_key, new_payload):
+        print('\n------------------------------------------------')
+        print(f'\nStarting the inserting function for {new_key}')
         #check if self.root exists
         if self.root:
-            #if self.root exists, run the _insert function recursively
-            self._insert(new_key, new_payload, self.root)
+            #if self.root exists, run the _put function recursively
+            self._put(new_key, new_payload, self.root)
         #if self.root does not exist, make a new root
         else:
-            print(f'No root exists. Creating a new node {new_key} at depth {self.depth}')
             self.root = TreeNode(new_key, new_payload)
-            self.depth += 1
-            return self.root
+            print(f'No root exists. Creating a new node {new_key}')
+        self.size+=1 
 
-    def _insert(self,new_key, new_payload, current_node):
+    def _put(self,new_key, new_payload, current_node):
+        print(f'\nChecking node {current_node} to place new node {new_key}')
         #check if new_key < current_node.key --> checking left child 
         if new_key < current_node.key:
             #check if left child exists
             if current_node.has_left_child():
-                self.depth += 1
-                #if left_child exists run the insert method recursively with left_child as the current node now
-                self._insert(new_key, new_payload, current_node.left_child)
+                #if left_child exists run the put method recursively with left_child as the current node now
+                self._put(new_key, new_payload, current_node.left_child)
             else:
-                #if left_child does not exist then insert the key as the current node's left_child
+                #if left_child does not exist then put the key as the current node's left_child
                 current_node.left_child = TreeNode(new_key, new_payload)
-                print(f'Inserting new node {new_key} to the left of {current_node} at depth {self.get_bst_depth()}')
-                return current_node.left_child
+                print(f'Inserting new node {new_key} to the left of {current_node}')
         #check if new_key > self.root.key --> checking right child
         elif new_key > current_node.key:
             #check if right child exists
             if current_node.has_right_child():
-                self.depth += 1
-                #if right_child exists, run the insert method recursively with right_child as current node
-                self._insert(new_key, new_payload, current_node.right_child)
+                #if right_child exists, run the put method recursively with right_child as current node
+                self._put(new_key, new_payload, current_node.right_child)
             else:
                 #if right_child does not exist, insert the key as current node's right_child
                 current_node.right_child = TreeNode(new_key, new_payload)
-                print(f'Inserting new node {new_key} to the right of {current_node} at {self.get_bst_depth()}')
-                return current_node.right_child
+                print(f'Inserting new node {new_key} to the right of {current_node}')
         #if new_key == current_node.key, update the key with the new payload
         else:
-            print(f'Updating {current_node} node\'s payload to include {new_payload}. {current_node} payload is now:')
+            print(f'Updating {current_node} node\'s payload to include {new_payload}. {current_node}\'s payload is now:')
             current_node.add_to_payload(new_payload)
             print(current_node.payload)
+    
+    def __setitem__(self, new_key, new_payload):
+        self.put(new_key, new_payload)
+
+    def get(self, key_search):
+        print('\n+++++++++++++++++++++++++++++++++++++++++++++++')
+        print(f'\nStarting the get function for {key_search}')
+        #check if self.root exists
+        if self.root:
+            #if self.root exists, run the _get function
+            resulting_node = self._get(key_search, self.root)
+            if resulting_node:
+                resulting_payload = resulting_node.payload
+                print(f'Returning the payload of {resulting_node}')
+                return resulting_payload
+            else:
+                return None
+        #if self.root does not exist, return None
+        else:
+            return None
+
+    def _get(self, key_search, current_node):
+        #if current_node does not exist, return None
+        if not current_node:
+            print(f'{key_search} does not exist in this tree')
+            return None
+        #if current_node exists
+        # check current_node.key == key_search, then return the payload of the key
+        elif current_node.key == key_search:
+            print(f'Found {key_search} at node {current_node}')
             return current_node
+        #if key_search < current_node, run the function recursively on current_node.left_child
+        elif key_search < current_node.key:
+            print(f'Searching the left child of {current_node} ({current_node.left_child}) for the key {key_search}')
+            return self._get(key_search, current_node.left_child)
+        #if key_search > current_node, run the function recursively on current_node.right_child
+        else:
+            print(f'Searching the right child of {current_node} ({current_node.right_child}) for the key {key_search}')
+            return self._get(key_search,current_node.right_child)
+    
+    #implement __getitem__
+    def __getitem__(self, key_search):
+        return self.get(key_search)
+
+    #implement __contains__ which overrides in operator
+    def __contains__(self, key_search):
+        if self.__getitem__(key_search):
+            return True
+        else:
+            return False
 
 class TreeNode:
     def __init__(self, key, payload, left_child = None, right_child = None, parent = None):
@@ -155,11 +202,17 @@ class TreeNode:
 # tests
 
 sample_bst = BST()
-key_f = sample_bst.insert('f', 1)
-key_a = sample_bst.insert('a', 2)
-key_h = sample_bst.insert('h', 3)
-key_z = sample_bst.insert('z', 4)
-key_f_update = sample_bst.insert('f', 5)
-
-    
-
+key_f = sample_bst.put('f', 1)
+key_a = sample_bst.put('a', 2)
+key_h = sample_bst.put('h', 3)
+key_z = sample_bst.put('z', 4)
+key_f_update = sample_bst.put('f', 5)
+key_j = sample_bst.put('j', 6)
+key_m = sample_bst.put('m', 7)
+key_e = sample_bst.put('e', 8)
+key_e_update = sample_bst.put('e', 9)
+sample_bst['o'] = 10
+print(sample_bst['a'])
+print(sample_bst.get('k'))
+if 'e' in sample_bst:
+    print('Found!')
