@@ -5,7 +5,7 @@ from datetime import datetime, timedelta
 from random import randrange, choice
 import csv 
 import pickle
-from studio_classes import Activity, Studio, Studio_List
+from studio_classes import Activity, Activity_Time_Wrapper, Studio, Studio_List
 from tree import BST, TreeNode
 
 studio_list = Studio_List()
@@ -25,7 +25,7 @@ def add_timings(start, end):
     return result
 
 def generate_activities(studio, dictionary, list_of_timings, names_list):
-    duration_options = [0.75, 1, 1.5, 2]
+    duration_options = [0.75, 1, 1.5]
     price_options = [price for price in range(0, 50, 5)]
     studio_instructors = []
     for i in range(randrange(5,11)):
@@ -33,19 +33,24 @@ def generate_activities(studio, dictionary, list_of_timings, names_list):
         studio_instructors.append(possible_instructor)
         names_list = [name for name in names_list if name != possible_instructor]
     for timings in list_of_timings:
-        if timings == afternoon_timings:
+        remaining_timings = timings.copy()
+        if timings == afternoon_timings or timings == morning_timings:
             random_number_of_classes = randrange(0, 3)
         else:
             random_number_of_classes = randrange(0, len(timings))
-    for i in range(random_number_of_classes):
-        random_class_title = choice(list(dictionary.keys()))
-        random_class_tags = dictionary[random_class_title]
-        random_start_time = str(choice(timings))
-        random_duration = choice(duration_options)
-        random_price = choice(price_options)
-        random_instructor = choice(studio_instructors)
-        names_list = [name for name in names_list if name != random_instructor]
-        studio.add_activities(random_class_title, random_start_time, random_duration, random_class_tags, random_price, random_instructor)
+        for _ in range(random_number_of_classes):
+            if len(remaining_timings) == 0:
+                break
+            random_class_title = choice(list(dictionary.keys()))
+            random_class_tags = dictionary[random_class_title]
+            random_start_time = choice(remaining_timings)
+            remaining_timings = [timing for timing in remaining_timings if 15 < abs(random_start_time - timing)]
+            random_start_time = str(random_start_time)
+            random_duration = choice(duration_options)
+            random_price = choice(price_options)
+            random_instructor = choice(studio_instructors)
+            names_list = [name for name in names_list if name != random_instructor]
+            studio.add_activities(random_class_title, random_start_time, random_duration, random_class_tags, random_price, random_instructor)
 
 def initialise_studio(studio, dictionary, list_of_timings, names_list = names_list):
     studio_list.add_studio(studio)
@@ -54,9 +59,10 @@ def initialise_studio(studio, dictionary, list_of_timings, names_list = names_li
 morning_timings = add_timings(5,10)
 afternoon_timings = add_timings(12,14)
 special_afternoon_timings = add_timings(14, 16)
+special_morning_timings = add_timings(4, 6)
 evening_timings = add_timings(17,22)
 list_of_timings = [morning_timings, afternoon_timings, evening_timings]
-list_of_special_timings = [morning_timings, afternoon_timings, special_afternoon_timings, evening_timings]
+list_of_special_timings = [morning_timings, afternoon_timings, special_afternoon_timings, evening_timings, special_morning_timings]
 
 #yoga studio 1: Eka Yoga
 eka_yoga = Studio("Eka Yoga", "2056 Dancing Dove Lane")
@@ -361,3 +367,10 @@ search_tree.depth_first_traversal()
 #pickle the studio list object instance 
 with open('tree.p', 'wb') as pickle_file:
     pickle.dump(search_tree, pickle_file)
+
+test1 = Activity(altitude_gym, "Climb", "1700", 1, ['climbing'], 0, 'John')
+test2 = Activity(altitude_gym, "Climb", "1700", 1, ['climbing'], 0, 'Mary')
+
+test1wrapped = Activity_Time_Wrapper(test1)
+test2wrapped = Activity_Time_Wrapper(test2)
+

@@ -15,9 +15,69 @@ class Activity:
         self.price = price
         self.instructor = instructor
     
+    def print_out(self):
+        print('\n------------------------------------------------------------------------------------')
+        print(f'\nClass: {self.title}')
+        print(f'Studio: {self.studio.studio_name}')
+        print(f'Address: {self.studio.location}')
+        print(f'Time: {datetime.strftime(self.start_time, "%I:%M %p")}')
+        print(f'Duration: {str(self.duration)} hours')
+        print(f'Price: ${self.price}')
+        print(f'Instructor: {self.instructor}')
+
     def __repr__(self):
         return self.title + " at " + self.start_time_string + " at " + self.studio.studio_name
-    
+
+class Activity_Time_Wrapper:
+    def __init__(self, activity):
+        self.activity = activity
+        
+    def __lt__(self, other):
+        if isinstance(other, Activity_Time_Wrapper):
+            if self.activity.start_time < other.activity.start_time:
+                return True
+            elif self.activity.start_time == other.activity.start_time:
+                return self.activity.studio.studio_name < other.activity.studio.studio_name
+            else:
+                return False
+        else:
+            raise TypeError
+
+    # def __le__(self, other):
+    #     if isinstance(other, Activity_Time_Wrapper):
+    #         if self.activity.start_time <= other.activity.start_time:
+    #             return True
+    #         else:
+    #             return False
+    #     else:
+    #         raise TypeError
+
+    # def __eq__(self, other):
+    #     if isinstance(other, Activity_Time_Wrapper):
+    #         if self.activity.start_time == other.activity.start_time:
+    #             return True
+    #         else:
+    #             return False
+    #     else:
+    #         raise TypeError
+
+    # def __gt__(self, other):
+    #     if isinstance(other, Activity_Time_Wrapper):
+    #         if self.activity.start_time > other.activity.start_time:
+    #             return True
+    #         else:
+    #             return False
+    #     else:
+    #         raise TypeError
+
+    # def __ge__(self, other):
+    #     if isinstance(other, Activity_Time_Wrapper):
+    #         if self.activity.start_time >= other.activity.start_time:
+    #             return True
+    #         else:
+    #             return False
+    #     else:
+    #         raise TypeError
 class Studio:
     studio_id = 0
     def __init__(self, studio_name, location):
@@ -65,7 +125,8 @@ class Studio_List:
         for studio in self.list_of_studios:
             for activity in studio.activities:
                 for tag in activity.tags:
-                    self.set_of_tags.add(tag.lower())
+                    lowercase_tag = tag.lower()
+                    self.set_of_tags.add(lowercase_tag)
     
     def get_tags(self):
         return self.set_of_tags

@@ -77,7 +77,8 @@ class BST:
         for studio in list_of_studios:
             for activity in studio.activities:
                 for tag in activity.tags:
-                    self.put(tag, activity)
+                    lowertag = tag.lower()
+                    self.put(lowertag, activity)
 
     def get(self, key_search):
         debugprint('\n+++++++++++++++++++++++++++++++++++++++++++++++')
