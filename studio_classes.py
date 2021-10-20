@@ -43,41 +43,6 @@ class Activity_Time_Wrapper:
         else:
             raise TypeError
 
-    # def __le__(self, other):
-    #     if isinstance(other, Activity_Time_Wrapper):
-    #         if self.activity.start_time <= other.activity.start_time:
-    #             return True
-    #         else:
-    #             return False
-    #     else:
-    #         raise TypeError
-
-    # def __eq__(self, other):
-    #     if isinstance(other, Activity_Time_Wrapper):
-    #         if self.activity.start_time == other.activity.start_time:
-    #             return True
-    #         else:
-    #             return False
-    #     else:
-    #         raise TypeError
-
-    # def __gt__(self, other):
-    #     if isinstance(other, Activity_Time_Wrapper):
-    #         if self.activity.start_time > other.activity.start_time:
-    #             return True
-    #         else:
-    #             return False
-    #     else:
-    #         raise TypeError
-
-    # def __ge__(self, other):
-    #     if isinstance(other, Activity_Time_Wrapper):
-    #         if self.activity.start_time >= other.activity.start_time:
-    #             return True
-    #         else:
-    #             return False
-    #     else:
-    #         raise TypeError
 class Studio:
     studio_id = 0
     def __init__(self, studio_name, location):

@@ -26,8 +26,9 @@ def add_timings(start, end):
 
 def generate_activities(studio, dictionary, list_of_timings, names_list):
     duration_options = [0.75, 1, 1.5]
-    price_options = [price for price in range(0, 50, 5)]
+    price_options = [price for price in range(10, 50, 5)]
     studio_instructors = []
+    random_price = choice(price_options)
     for i in range(randrange(5,11)):
         possible_instructor = choice(names_list)
         studio_instructors.append(possible_instructor)
@@ -47,7 +48,6 @@ def generate_activities(studio, dictionary, list_of_timings, names_list):
             remaining_timings = [timing for timing in remaining_timings if 15 < abs(random_start_time - timing)]
             random_start_time = str(random_start_time)
             random_duration = choice(duration_options)
-            random_price = choice(price_options)
             random_instructor = choice(studio_instructors)
             names_list = [name for name in names_list if name != random_instructor]
             studio.add_activities(random_class_title, random_start_time, random_duration, random_class_tags, random_price, random_instructor)
