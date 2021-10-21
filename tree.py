@@ -1,3 +1,5 @@
+from collections import deque
+
 debug_status = False
 
 def debugprint(str):
@@ -80,6 +82,36 @@ class BST:
                     lowertag = tag.lower()
                     self.put(lowertag, activity)
 
+    def bft(self, search_input):
+        #check if root exists. if root does not exist, return None
+        if self.root:
+            #implement frontier queue 
+            path_queue = deque()
+            initial_path = [self.root]
+            path_queue.appendleft(initial_path)
+            result_list = []
+            #while there is still anything left in the frontier queue:
+            while path_queue:
+                #Pop the next path list off the frontier
+                current_path = path_queue.pop()
+                #Get the frontier node from the path list
+                current_node = current_path[-1]
+                debugprint(f'Searching node with key: {current_node.key}')
+                #at each node check if key == search_input. if so, append key to possible list
+                if current_node.key == search_input or search_input == current_node.key[0:len(search_input)]:
+                    result_list.append(current_node)
+                #for each child of the current node:
+                for child in current_node.get_children():
+                #make a copy of the current path
+                    new_path = current_path.copy()
+                #add the child to the copy
+                    new_path.append(child)
+                #append the updated path to the frontier queue
+                    path_queue.appendleft(new_path)
+            return result_list
+        else:
+            return None
+        
     def get(self, key_search):
         debugprint('\n+++++++++++++++++++++++++++++++++++++++++++++++')
         debugprint(f'\nStarting the get function for {key_search}')
@@ -238,6 +270,14 @@ class TreeNode:
     
     def __repr__(self):
         return self.key
+
+    def get_children(self):
+        children_list = []
+        if self.left_child:
+            children_list.append(self.left_child)
+        if self.right_child:
+            children_list.append(self.right_child)
+        return children_list
     
     def add_to_payload(self, new_payload):
         if isinstance(new_payload, list) or isinstance(new_payload, set):
