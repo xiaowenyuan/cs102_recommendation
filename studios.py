@@ -356,9 +356,9 @@ initialise_studio(altitude_gym, altitude_dict, list_of_special_timings)
 studio_list.compile_tags()
 
 #test
-print(studio_list.show_studios())
-print(len(studio_list.show_studios()))
-print(studio_list.get_tags())
+#print(studio_list.show_studios())
+#print(len(studio_list.show_studios()))
+#print(studio_list.get_tags())
 
 search_tree = BST()
 search_tree.update_from_database(studio_list)
@@ -368,9 +368,4 @@ search_tree.depth_first_traversal()
 with open('tree.p', 'wb') as pickle_file:
     pickle.dump(search_tree, pickle_file)
 
-test1 = Activity(altitude_gym, "Climb", "1700", 1, ['climbing'], 0, 'John')
-test2 = Activity(altitude_gym, "Climb", "1700", 1, ['climbing'], 0, 'Mary')
-
-test1wrapped = Activity_Time_Wrapper(test1)
-test2wrapped = Activity_Time_Wrapper(test2)
 

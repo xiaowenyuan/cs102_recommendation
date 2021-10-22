@@ -65,16 +65,16 @@ def run_script():
         search_input = input('\nType the beginning of the activity and press enter to see if it\'s here: ')
         print(f'\nSearching for activities that start with the letter(s) \'{search_input}\'')
         search_result = tree.bft(search_input.lower())
-        if len(search_result) == 0:
-            print(f'\nThere are no activities that start with the letters \'{search_input}\'.')
-            print('\nPlease try again.')
-            continue
         while len(search_result) > 1:
-            print(f'\Here are {len(search_result)} activities that start with the letter(s) \'{search_input}\': ')
+            print(f'\nHere are {len(search_result)} activities that start with the letter(s) \'{search_input}\': ')
             print('\n')
             print(search_result)
             search_input = input('\nIf you already know the activity you want, enter it here. Else, type the beginning of the activity and press enter to see if it\'s here: ')
             search_result = tree.bft(search_input.lower())
+        if len(search_result) == 0:
+            print(f'\nThere are no activities that start with the letters \'{search_input}\'.')
+            print('\nPlease try again.')
+            continue
         if search_result[0].key == search_input:
             confirmed_yn = input(f'Would you like to look for classes that involve {search_result[0].key}? Enter \'Y\' to proceed, or \'N\' to restart the search: ').lower()
         else:
@@ -86,7 +86,7 @@ def run_script():
             continue
         if confirmed_yn == 'y':
             result = search_result[0].payload
-            print(f'We found {len(result)} classes that involve {search_result[0].key}.')
+            print(f'\nWe found {len(result)} classes that involve {search_result[0].key}.')
         start_time = input('\nPlease insert the earliest time you would like to attend class at. Please use the 24 hour time format in HHMM (max time is 2359). For example, 8AM is 800 and 530PM is 1730: ')
         while is_valid_time(start_time) == False:
             print('\nSorry, that is an invalid entry.')
@@ -128,4 +128,5 @@ def run_script():
         continue
 
 run_script()
+
 
