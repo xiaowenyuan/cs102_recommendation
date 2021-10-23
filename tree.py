@@ -1,7 +1,7 @@
 from collections import deque
 from random import choice
 
-debug_status = True
+debug_status = False
 
 def debugprint(str):
     if debug_status:
@@ -36,8 +36,6 @@ class BST:
             self.size += 1
             return self.root
         
-        
-
     def _put(self,new_key, new_payload, current_node, depth):
         debugprint(f'\nChecking node {current_node} to place new node {new_key} at depth {depth}')
         #check if new_key < current_node.key --> checking left child 
@@ -300,11 +298,37 @@ class BST:
             if current_node.has_right_child():
                 self.depth_first_traversal(current_node.right_child)
 
-    def smallest_key_node(self, node):
-        current_node = node
-        while current_node.left_child:
-            current_node = current_node.left_child
-        return current_node
+    def find_min(self):
+        return self.root.find_min()
+
+    def in_order_traverse(self):
+        current_node = self.find_min()
+        while current_node.next():
+            print(current_node)
+            current_node = current_node.next()
+
+    def find_lower_bound(self, search_term):
+        #find the lowest key that is >= search_term 
+        current_node = self.root 
+        lowest_valid_node = None
+        while current_node is not None:
+            if current_node.key >= search_term:
+                lowest_valid_node = current_node
+                current_node = current_node.left_child 
+            else:
+                current_node = current_node.right_child
+        return lowest_valid_node
+
+    #autocomplete search function is inspired by Michael Grey PhD
+    def autocomplete_search(self, search_term):
+        result_list = []
+        #find the lowest node key that is >= search term
+        current_node = self.find_lower_bound(search_term)
+        #in order traversal from current node until node.key[:len(search_term)] != search_term
+        while current_node.key[:len(search_term)] == search_term:
+            result_list.append(current_node)
+            current_node = current_node.next()
+        return result_list
 
     def find_depth(self, node):
         depth_count = 1
@@ -622,7 +646,18 @@ class TreeNode:
                     successor = self.parent.find_successor()
                     #re-initialise current node as successor has been found
                     self.parent.right_child = self
-        return successor 
+        return successor
+
+    def next(self):
+        #return the next node in order 
+        if self.has_right_child():
+            return self.right_child.find_min()
+        from_node = self
+        to_node = self.parent
+        while to_node is not None and to_node.right_child == from_node:
+            from_node = to_node
+            to_node = to_node.parent
+        return to_node
 
     def find_min(self):
         current_node = self
@@ -777,3 +812,4 @@ if __name__ == '__main__':
 
     print(random_tree.root)
     random_tree.remove(random_tree.root)
+    random_tree.in_order_traverse()

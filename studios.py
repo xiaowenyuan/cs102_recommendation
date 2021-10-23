@@ -351,21 +351,17 @@ altitude_dict = {
 }
 initialise_studio(altitude_gym, altitude_dict, list_of_special_timings)
 
+print('\nGenerating random studios and classes...')
 #compile all the tags into a set in the Studio List class
-
 studio_list.compile_tags()
-
-#test
-#print(studio_list.show_studios())
-#print(len(studio_list.show_studios()))
-#print(studio_list.get_tags())
-
 search_tree = BST()
 search_tree.update_from_database(studio_list)
-search_tree.depth_first_traversal()
+print('\nGenerating binary search tree database...')
 
 #pickle the studio list object instance 
 with open('tree.p', 'wb') as pickle_file:
     pickle.dump(search_tree, pickle_file)
 
+print('\nDatabase saved.')
+print('\nExecute script.py to search through database.')
 

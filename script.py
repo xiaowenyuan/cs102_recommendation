@@ -64,13 +64,13 @@ def run_script():
     while end_program is False:
         search_input = input('\nType the beginning of the activity and press enter to see if it\'s here: ')
         print(f'\nSearching for activities that start with the letter(s) \'{search_input}\'')
-        search_result = tree.bft(search_input.lower())
+        search_result = tree.autocomplete_search(search_input.lower())
         while len(search_result) > 1:
             print(f'\nHere are {len(search_result)} activities that start with the letter(s) \'{search_input}\': ')
             print('\n')
             print(search_result)
             search_input = input('\nIf you already know the activity you want, enter it here. Else, type the beginning of the activity and press enter to see if it\'s here: ')
-            search_result = tree.bft(search_input.lower())
+            search_result = tree.autocomplete_search(search_input.lower())
         if len(search_result) == 0:
             print(f'\nThere are no activities that start with the letters \'{search_input}\'.')
             print('\nPlease try again.')
